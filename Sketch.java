@@ -16,14 +16,14 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     background(137, 196, 118);
+    randFlower(100, 100, (int)random(2,5), 20);
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-    noStroke();
-	  flower(width/2, height/2, 50);
+	  flower(width/2, height/2, 70);
   }
   
   /*
@@ -70,9 +70,40 @@ public class Sketch extends PApplet {
    * @param size. The size of the flower's pistil.
    */
   private void randFlower(int X, int Y, int layers, int size){
+
+    int scale = size;
+
+    pushMatrix();
+
+    translate(X, Y);
+
     for (int i = 0; i < layers; i++){
-      pedals( (int)(random(5) * 2), size, size, size);
+      int pedalsAmount = (int)random(2,6) * 2;
+      float pedalLegnth = random( (float)1.2, 2);
+      float pedalWidth = random( (float)0.3, 1);
+
+      if(pedalsAmount % 6 == 0){
+        rotate(PI / 3);
+      } else {
+        rotate(QUARTER_PI / 2);
+      }
+
+      fill(randColor() );
+      pedals( pedalsAmount, (scale * pedalLegnth), (scale * pedalWidth), (float)(scale * 0.8) );
+      
+      scale = scale + (int)(size * 0.2);
+
+      if(pedalsAmount % 6 == 0){
+        rotate(PI / 3);
+      }
+
     }
+    int yellow = (int)random(200,255);
+    int blue = (int)random(0, 50);
+    fill(yellow, yellow, blue);
+    circle(0, 0, size);
+
+    popMatrix();
   }
 
   /*
@@ -98,7 +129,67 @@ public class Sketch extends PApplet {
    * @return a random colour.
    */
   public int randColor(){
-    int randColor = color( (int)random(255), (int)random(255), (int)random(255) );
+    int randR;
+    int randG = (int)random(255);
+    int randB;
+    int coin = (int)random(0,1);
+
+    if (randG < 100)
+    {
+      if (coin == 1){
+        randR = lightColor();
+        randB = (int)random(255);
+      } else {
+        randB = lightColor();
+        randR = (int)random(255);
+      }
+    } else if (randG > 200){
+      if (coin ==1){
+        randR = darkColor();
+        randB = (int)random(255);
+      } else {
+        randB = darkColor();
+        randR = (int)random(255);
+      }
+    } else {
+      randR = (int)random(255);
+      randB = (int)random(255);
+    }
+    
+    int randColor = color(randR, randG, randB);
     return randColor;
   }
+
+  /*
+   * selects a random darker color value.
+   * 
+   * @return a random darker colour value.
+   */
+  public int darkColor(){
+    int color = (int)random(0, 60);
+    return color;
+  }
+
+  /*
+   * selects a random lighter color value.
+   * 
+   * @return a random lighter colour value.
+   */
+  public int lightColor(){
+    int color = (int)random(160, 255);
+    return color;
+  }
+
+  /*
+   * 
+   */
+  public int flowerSpawn(int posX, int posY, int flowerSize, int columns){
+    for (int i = 0; i < columns; i++){
+      if (posX - flowerSize * 3){
+
+      }
+    }
+    return X;
+  }
+
 }
