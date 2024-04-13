@@ -185,9 +185,9 @@ public class Sketch extends PApplet {
    */
   public int flowerSpawn(int posX, int posY, int flowerSize, int columns){
     for (int i = 0; i < columns; i++){
-      if (posX - flowerSize * 3){
+      //if (posX - flowerSize * 3){
 
-      }
+      //}
     }
     return X;
   }
