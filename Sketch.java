@@ -250,6 +250,7 @@ public class Sketch extends PApplet {
    * 
    * @param posX. the current X position of where a flower wants to be spawned.
    * @param posY. the current Y position of where a flower wants to be spawned.
+   * @return clear. determins if it's too close to the centeral flower to spawn a flower
    */
   public boolean flowerAlg(int posX, int posY, int flowerSize){
 
