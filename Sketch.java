@@ -5,6 +5,7 @@ public class Sketch extends PApplet {
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
+
   public void settings() {
 	// put your size call here
     size(1200, 750);
@@ -14,16 +15,44 @@ public class Sketch extends PApplet {
    * Called once at the beginning of execution.  Add initial set up
    * values here i.e background, stroke, fill etc.
    */
+
+  int centerSize;
+  
+  int screenSize;
+
+  int randFlowerSize;
+
+  int randFlowerDistance;
+
   public void setup() {
     background(137, 196, 118);
-    randFlower(100, 100, (int)random(2,5), 20);
+
+    if (width > height){
+      screenSize = height;
+    } else {
+      screenSize = width;
+    }
+
+    randFlowerSize = screenSize / 20;
+
+    centerSize = (screenSize / 15);
+
+    randFlowerDistance = screenSize / 5;
+
+    for (int y = randFlowerDistance; y <= height - randFlowerDistance; y+= randFlowerDistance){
+      for (int x = randFlowerDistance; x <= width - randFlowerDistance; x+= randFlowerDistance){
+        if (flowerAlg(x, y, randFlowerSize) ){
+          randFlower(x, y, (int)random(2,5), randFlowerSize);
+        }
+      }
+    }
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-	  flower(width/2, height/2, 70);
+	  flower(width/2, height/2, centerSize);
   }
   
   /*
@@ -71,31 +100,34 @@ public class Sketch extends PApplet {
    */
   private void randFlower(int X, int Y, int layers, int size){
 
-    int scale = size;
+    int scale;
+
+    scale = (int)(size + (layers * (size / 12) * 0.5) );
 
     pushMatrix();
 
     translate(X, Y);
 
     for (int i = 0; i < layers; i++){
+
       int pedalsAmount = (int)random(2,6) * 2;
       float pedalLegnth = random( (float)1.2, 2);
       float pedalWidth = random( (float)0.3, 1);
 
-      if(pedalsAmount % 6 == 0){
-        rotate(PI / 3);
-      } else {
-        rotate(QUARTER_PI / 2);
+      int coin = (int)random(2);
+
+      if(coin == 1){
+        rotate(TWO_PI / pedalsAmount / 2);
       }
 
       fill(randColor() );
       pedals( pedalsAmount, (scale * pedalLegnth), (scale * pedalWidth), (float)(scale * 0.8) );
-      
-      scale = scale + (int)(size * 0.2);
 
-      if(pedalsAmount % 6 == 0){
-        rotate(PI / 3);
+      if(coin == 1){
+        rotate(-1 * (TWO_PI / pedalsAmount / 2) );
       }
+      
+      scale = scale - (int)(size * 0.2);
 
     }
     int yellow = (int)random(200,255);
@@ -108,6 +140,7 @@ public class Sketch extends PApplet {
 
   /*
    * draws a ring of pedals
+   * needs to be used within a pushmatrix method
    * 
    * @param amount. The amount of pedals.
    * @param length. The length of each pedal.
@@ -117,9 +150,9 @@ public class Sketch extends PApplet {
   private void pedals(int amount, float length, float width, float distance){
     for (int i = 0; i < amount; i++)
     {
-      ellipse(0, distance, width, (length));
-
       rotate(TWO_PI / amount);
+
+      ellipse(0, distance, width, length);
     }
   }
 
@@ -132,7 +165,7 @@ public class Sketch extends PApplet {
     int randR;
     int randG = (int)random(255);
     int randB;
-    int coin = (int)random(0,1);
+    int coin = (int)random(2);
 
     if (randG < 100)
     {
@@ -144,7 +177,7 @@ public class Sketch extends PApplet {
         randR = (int)random(255);
       }
     } else if (randG > 200){
-      if (coin ==1){
+      if (coin == 1){
         randR = darkColor();
         randB = (int)random(255);
       } else {
@@ -181,15 +214,24 @@ public class Sketch extends PApplet {
   }
 
   /*
+   * an algorithm to avoid spawning flowers on the center flower
    * 
+   * @param posX. the current X position of where a flower wants to be spawned.
+   * @param posY. the current Y position of where a flower wants to be spawned.
    */
-  public int flowerSpawn(int posX, int posY, int flowerSize, int columns){
-    for (int i = 0; i < columns; i++){
-      //if (posX - flowerSize * 3){
+  public boolean flowerAlg(int posX, int posY, int flowerSize){
 
-      //}
+    boolean clear = true;
+
+    int flowerDistanceX = Math.abs(posX - (width / 2) );
+    int flowerDistanceY = Math.abs(posY - (height / 2) );
+    double flowerDistance = Math.sqrt( (flowerDistanceX * flowerDistanceX) + (flowerDistanceY * flowerDistanceY) );
+
+    if (flowerDistance < (centerSize * 2) + flowerSize){
+      clear = false;
     }
-    return X;
+
+    return clear;
   }
 
 }
