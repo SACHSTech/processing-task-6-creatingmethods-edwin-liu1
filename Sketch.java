@@ -16,6 +16,7 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
 
+  // variables
   int centerSize;
   
   int screenSize;
@@ -26,6 +27,8 @@ public class Sketch extends PApplet {
 
   public void setup() {
     background(137, 196, 118);
+
+    // variable calculations
 
     if (width > height){
       screenSize = height;
@@ -39,20 +42,26 @@ public class Sketch extends PApplet {
 
     randFlowerDistance = screenSize / 5;
 
-    for (int y = randFlowerDistance; y <= height - randFlowerDistance; y+= randFlowerDistance){
-      for (int x = randFlowerDistance; x <= width - randFlowerDistance; x+= randFlowerDistance){
+    // draws the randomized flowers
+    for (int y = (randFlowerDistance / 2); y <= height - (randFlowerDistance / 2); y+= randFlowerDistance){
+      for (int x = (randFlowerDistance / 2); x <= width - (randFlowerDistance / 2); x+= randFlowerDistance){
         if (flowerAlg(x, y, randFlowerSize) ){
           randFlower(x, y, (int)random(2,5), randFlowerSize);
         }
       }
     }
+    // the random flowers are here because if 
+
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+
+    // the centeral flower
 	  flower(width/2, height/2, centerSize);
+
   }
   
   /*
@@ -110,19 +119,31 @@ public class Sketch extends PApplet {
 
     for (int i = 0; i < layers; i++){
 
-      int pedalsAmount = (int)random(2,6) * 2;
+      // random variables
+      int pedalsAmount = Math.round(random(3,12) );
       float pedalLegnth = random( (float)1.2, 2);
       float pedalWidth = random( (float)0.3, 1);
 
-      int coin = (int)random(2);
+      // heads or tails?
+      int coin = Math.round(random(1) );
 
+      // these pedal amounts don't look good.
+      if (pedalsAmount == 7){
+        pedalsAmount *= 2;
+      } else if (pedalsAmount == 9 || pedalsAmount == 11){
+        pedalsAmount++;
+      }
+
+      // flip a coin to see if the pedals are rotated a bit
       if(coin == 1){
         rotate(TWO_PI / pedalsAmount / 2);
       }
 
+      // draws a ring of pedals for the flower
       fill(randColor() );
       pedals( pedalsAmount, (scale * pedalLegnth), (scale * pedalWidth), (float)(scale * 0.8) );
 
+      // gotta rotate it back
       if(coin == 1){
         rotate(-1 * (TWO_PI / pedalsAmount / 2) );
       }
@@ -130,8 +151,12 @@ public class Sketch extends PApplet {
       scale = scale - (int)(size * 0.2);
 
     }
-    int yellow = (int)random(200,255);
-    int blue = (int)random(0, 50);
+
+    // the flower pistil
+
+    // random yellow
+    int yellow = (int)random(220,255);
+    int blue = (int)random(0, 150);
     fill(yellow, yellow, blue);
     circle(0, 0, size);
 
@@ -162,11 +187,17 @@ public class Sketch extends PApplet {
    * @return a random colour.
    */
   public int randColor(){
+
+    // variable set up
+
     int randR;
     int randG = (int)random(255);
     int randB;
-    int coin = (int)random(2);
 
+    // flip a coin. heads or tails?
+    int coin = Math.round(random(1) );
+
+    // this is just to get more vibrant colours
     if (randG < 100)
     {
       if (coin == 1){
@@ -189,14 +220,15 @@ public class Sketch extends PApplet {
       randB = (int)random(255);
     }
     
+    // putting the colours all together
     int randColor = color(randR, randG, randB);
     return randColor;
   }
 
   /*
-   * selects a random darker color value.
+   * selects a random low color value.
    * 
-   * @return a random darker colour value.
+   * @return a random low colour value.
    */
   public int darkColor(){
     int color = (int)random(0, 60);
@@ -204,9 +236,9 @@ public class Sketch extends PApplet {
   }
 
   /*
-   * selects a random lighter color value.
+   * selects a random high color value.
    * 
-   * @return a random lighter colour value.
+   * @return a random high colour value.
    */
   public int lightColor(){
     int color = (int)random(160, 255);
@@ -214,7 +246,7 @@ public class Sketch extends PApplet {
   }
 
   /*
-   * an algorithm to avoid spawning flowers on the center flower
+   * a simple algorithm to avoid spawning flowers on the center flower
    * 
    * @param posX. the current X position of where a flower wants to be spawned.
    * @param posY. the current Y position of where a flower wants to be spawned.
@@ -227,7 +259,7 @@ public class Sketch extends PApplet {
     int flowerDistanceY = Math.abs(posY - (height / 2) );
     double flowerDistance = Math.sqrt( (flowerDistanceX * flowerDistanceX) + (flowerDistanceY * flowerDistanceY) );
 
-    if (flowerDistance < (centerSize * 2) + flowerSize){
+    if (flowerDistance < (centerSize * 2.5) + flowerSize){
       clear = false;
     }
 
